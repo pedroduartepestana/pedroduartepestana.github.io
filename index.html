@@ -129,9 +129,10 @@
     </select>
     </div>
 
+    <!-- Display results -->
     <hr>
     <h2>Equações das Métricas Temporais</h2>
-    <p><strong>TS - Temporal Score:</strong> <span id="ts">0</span></p>
+    <p><strong>Temporal Score (TS):</strong> <span id="ts">0</span></p>
 
   <!-- JavaScript to calculate metrics -->
     <script>
@@ -153,6 +154,8 @@
         const ecmDropdown = document.getElementById("ecm");
         const rlDropdown = document.getElementById("rl");
         const rcDropdown = document.getElementById("rc");
+
+        const tsField = document.getElementById("ts");
 
         function calculateMetrics() {
             const av = parseFloat(avDropdown.value);
@@ -216,7 +219,7 @@
     </script>
 
     <footer class="version">
-        Version 0.02
+        Version 0.03
     </footer>
 </body>
 </html>
