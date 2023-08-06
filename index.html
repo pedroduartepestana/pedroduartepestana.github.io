@@ -129,6 +129,10 @@
     </select>
     </div>
 
+    <hr>
+    <h2>Equações das Métricas Temporais</h2>
+    <p><strong>TS - Temporal Score:</strong> <span id="ts">0</span></p>
+
   <!-- JavaScript to calculate metrics -->
     <script>
         // Reference to dropdowns and result fields
@@ -159,6 +163,9 @@
             const c = parseFloat(cDropdown.value);
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
+            const ecm = parseFloat(ecmDropdown.value);
+            const rl = parseFloat(rlDropdown.value);
+            const rc = parseFloat(rcDropdown.value);
 
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
@@ -181,11 +188,14 @@
                 BS = Math.ceil(Math.min(1.08*(Imp + Expl), 10) * 10) / 10;
             }
 
+            const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
+
             // Update fields
             issField.textContent = ISS.toFixed(2);
             impField.textContent = Imp.toFixed(2);
             explField.textContent = Expl.toFixed(2);
             bsField.textContent = BS.toFixed(2);
+            tsField.textContent = TS.toFixed(2);
         }
 
 // Attach event listener to dropdowns
