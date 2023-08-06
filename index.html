@@ -4,9 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVSS Calculator</title>
+        <style>
+        /* Styling to make version text smaller */
+        .version {
+            font-size: 0.8em;
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
+    <h2>Variables</h2>
     <!-- Dropdowns for variables -->
+    <div>
     <label for="av">AV - Attack Vector</label>
     <select id="av">
         <option value="0.85">Network</option>
@@ -14,45 +23,68 @@
         <option value="0.55">Local</option>
         <option value="0.2">Physical</option>
     </select>
-        <label for="ac">AC - Attack Complexity</label>
+    </div>
+
+    <div>
+    <label for="ac">AC - Attack Complexity</label>
     <select id="ac">
         <option value="0.44">High</option>
         <option value="0.77">Low</option>
     </select>
-        <label for="pr">PR - Privileges Required</label>
+    </div>
+
+    <div>
+    <label for="pr">PR - Privileges Required</label>
     <select id="pr">
         <option value="0.85">None</option>
         <option value="0.62">Low</option>
         <option value="0.27">Hgh</option>
     </select>
-        <label for="ui">UI - User Interaction</label>
+    </div>
+   
+    <div>
+    <label for="ui">UI - User Interaction</label>
     <select id="ui">
         <option value="0.85">None</option>
         <option value="0.62">Required</option>
     </select>
-        <label for="s">S - Scope</label>
+    </div>
+    
+    <div>    
+    <label for="s">S - Scope</label>
     <select id="s">
         <option value="1">Unchanged</option>
         <option value="1">Changed</option>
     </select>
-        <label for="c">C - Confidentiality</label>
+    </div>
+   
+    <div>
+    <label for="c">C - Confidentiality</label>
     <select id="c">
         <option value="0">None</option>
         <option value="0.22">Low</option>
         <option value="0.56">Hgh</option>
     </select>
-        <label for="i">I - Integrity</label>
+    </div>
+    
+    <div>
+    <label for="i">I - Integrity</label>
     <select id="i">
         <option value="0">None</option>
         <option value="0.22">Low</option>
         <option value="0.56">Hgh</option>
     </select>
-        <label for="a">A - Availability</label>
+    </div>
+
+    <div>
+    <label for="a">A - Availability</label>
     <select id="a">
         <option value="0">None</option>
         <option value="0.22">Low</option>
         <option value="0.56">Hgh</option>
     </select>
+    </div>
+
 
     <!-- Display results -->
     <hr>
@@ -126,5 +158,9 @@
         // Initial calculation
         calculateMetrics();
     </script>
+
+    <footer class="version">
+        Version 0.01
+    </footer>
 </body>
 </html>
