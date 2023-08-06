@@ -85,6 +85,9 @@
     </select>
     </div>
 
+    <label for="limitToTen">Limit to 10:</label>
+    <input type="checkbox" id="limitToTen" checked>
+
 
     <!-- Display results -->
     <hr>
@@ -145,6 +148,7 @@
         const cDropdown = document.getElementById("c");
         const iDropdown = document.getElementById("i");
         const aDropdown = document.getElementById("a");
+        const limitToTenCheckbox = document.getElementById("limitToTen");
 
         const issField = document.getElementById("iss");
         const impField = document.getElementById("imp");
@@ -169,6 +173,8 @@
             const ecm = parseFloat(ecmDropdown.value);
             const rl = parseFloat(rlDropdown.value);
             const rc = parseFloat(rcDropdown.value);
+            
+
 
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
@@ -186,9 +192,17 @@
             if (Imp === 0) {
                 BS = 0;
             } else if (sValue === "Unchanged") {
-                BS = Math.ceil(Math.min(Imp + Expl, 10) * 10) / 10;
+            let tempResult = Imp + Expl;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BS = Math.ceil(tempResult * 10) / 10;
             } else {
-                BS = Math.ceil(Math.min(1.08*(Imp + Expl), 10) * 10) / 10;
+                let tempResult = 1.08 * (Imp + Expl);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BS = Math.ceil(tempResult * 10) / 10;
             }
 
             const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
@@ -213,6 +227,7 @@
         ecmDropdown.addEventListener("change", calculateMetrics);
         rlDropdown.addEventListener("change", calculateMetrics);
         rcDropdown.addEventListener("change", calculateMetrics);
+        limitToTenCheckbox.addEventListener("change", calculateMetrics);
 
         // Initial calculation
         calculateMetrics();
