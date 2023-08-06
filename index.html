@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-    <h2>Variables</h2>
+    <h2>Métricas Base</h2>
     <!-- Dropdowns for variables -->
     <div>
     <label for="av">AV - Attack Vector</label>
@@ -61,37 +61,73 @@
     <div>
     <label for="c">C - Confidentiality</label>
     <select id="c">
-        <option value="0">None</option>
+        <option value="0.56">High</option>
         <option value="0.22">Low</option>
-        <option value="0.56">Hgh</option>
+        <option value="0">None</option>
     </select>
     </div>
     
     <div>
     <label for="i">I - Integrity</label>
     <select id="i">
-        <option value="0">None</option>
+        <option value="0.56">High</option>
         <option value="0.22">Low</option>
-        <option value="0.56">Hgh</option>
+        <option value="0">None</option>
     </select>
     </div>
 
     <div>
     <label for="a">A - Availability</label>
     <select id="a">
-        <option value="0">None</option>
+        <option value="0.56">High</option>
         <option value="0.22">Low</option>
-        <option value="0.56">Hgh</option>
+        <option value="0">None</option>
     </select>
     </div>
 
 
     <!-- Display results -->
     <hr>
+    <h2>Equações das Métricas Base</h2>
     <p><strong>ISS:</strong> <span id="iss">0</span></p>
     <p><strong>Impact (Imp):</strong> <span id="imp">0</span></p>
     <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
     <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
+
+    <hr>
+    <h2>Métricas Temporais</h2>
+
+    <div>
+    <label for="ecm">ECM - Exploit Code Maturity</label>
+    <select id="ecm">
+        <option value="1">Not Defined</option>
+        <option value="0.91">Unproven</option>
+        <option value="0.94">Proof-of-concept</option>
+        <option value="0.97">Functional</option>
+        <option value="1">High</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="rl">RL - Remediation Level</label>
+    <select id="rl">
+        <option value="1">Not Defined</option>
+        <option value="0.95">Official Fix</option>
+        <option value="0.96">Temporary Fix</option>
+        <option value="0.97">Workaround</option>
+        <option value="1">Unavailable</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="rc">RC - Report Confidence</label>
+    <select id="rc">
+        <option value="1">Not Defined</option>
+        <option value="0.92">Unknown</option>
+        <option value="0.96">Reasonable</option>
+        <option value="1">Confirmed</option>
+    </select>
+    </div>
 
   <!-- JavaScript to calculate metrics -->
     <script>
@@ -110,32 +146,39 @@
         const explField = document.getElementById("expl");
         const bsField = document.getElementById("bs");
 
+        const ecmDropdown = document.getElementById("ecm");
+        const rlDropdown = document.getElementById("rl");
+        const rcDropdown = document.getElementById("rc");
+
         function calculateMetrics() {
             const av = parseFloat(avDropdown.value);
             const ac = parseFloat(acDropdown.value);
             const pr = parseFloat(prDropdown.value);
             const ui = parseFloat(uiDropdown.value);
-            const sValue = sDropdown.options[sDropdown.selectedIndex].text;  // Get the text value for "s"
+            const sValue = sDropdown.options[sDropdown.selectedIndex].text;  // Text value for "s"
             const c = parseFloat(cDropdown.value);
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
 
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
+
             let Imp;
             if (sValue === "Unchanged") {
                 Imp = 6.42 * ISS;
             } else {
-                Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS, 15);
+                Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS-0.02, 15);
             }
+
             const Expl = 8.22 * av * ac * pr * ui;
+
             let BS;
             if (Imp === 0) {
                 BS = 0;
             } else if (sValue === "Unchanged") {
-                BS = Math.min(Imp + Expl, 10);
+                BS = Math.ceil(Math.min(Imp + Expl, 10) * 10) / 10;
             } else {
-                BS = Math.min(1.08*(Imp + Expl), 10);
+                BS = Math.ceil(Math.min(1.08*(Imp + Expl), 10) * 10) / 10;
             }
 
             // Update fields
