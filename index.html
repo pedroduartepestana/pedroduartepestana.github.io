@@ -322,6 +322,10 @@
             const mi = parseFloat(miDropdown.value);
             const ma = parseFloat(maDropdown.value);
 
+            const cr = parseFloat(mcDropdown.value);
+            const ir = parseFloat(miDropdown.value);
+            const ar = parseFloat(maDropdown.value);
+
 
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
@@ -356,7 +360,7 @@
             const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
 
             // Compute MISS, MImp, MExp, EnvironmentalScore
-            const MISS = Math.min((1 - ((1 - cr * mc)*(1 - ir * mi)*(1 - ar * ma))), 0.915);
+            const MISS = Math.min(1 - ((1 - cr * mc) * (1 - ir * mi) * (1 - ar * ma)), 0.915);
 
             let MImp;
             if (msValue === "Unchanged") {
