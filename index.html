@@ -97,6 +97,7 @@
     <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
     <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
 
+    <!-- Dropdowns for variables -->
     <hr>
     <h2>Métricas Temporais</h2>
 
@@ -137,9 +138,127 @@
     <h2>Equações das Métricas Temporais</h2>
     <p><strong>Temporal Score (TS):</strong> <span id="ts">0</span></p>
 
+    <!-- Dropdowns for variables -->
+    <hr>
+    <h2>Equações das Métricas Ambientais</h2>
+    <div>
+    <label for="cr">CR - Confidentiality Report</label>
+    <select id="cr">
+        <option value="1">Not Defined</option>
+        <option value="0.5">Low</option>
+        <option value="1">Medium</option>
+        <option value="1.5">High</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="ir">IR - Integrity Requirement</label>
+    <select id="ir">
+        <option value="1">Not Defined</option>
+        <option value="0.5">Low</option>
+        <option value="1">Medium</option>
+        <option value="1.5">High</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="ar">AR - Availability Requirement</label>
+    <select id="ar">
+        <option value="1">Not Defined</option>
+        <option value="0.5">Low</option>
+        <option value="1">Medium</option>
+        <option value="1.5">High</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="mav">MAV - Modified Attack Vector</label>
+    <select id="mav">
+        <option value="1">Not Defined</option>
+        <option value="0.85">Network</option>
+        <option value="0.62">Adjacent</option>
+        <option value="0.55">Local</option>
+        <option value="0.2">Physical</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="mac">MAC - Modified Attack Complexity</label>
+    <select id="mac">
+        <option value="1">Not Defined</option>
+        <option value="0.44">High</option>
+        <option value="0.77">Low</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="mpr">MPR - Modified Privileges Required</label>
+    <select id="mpr">
+        <option value="1">Not Defined</option>
+        <option value="0.85">None</option>
+        <option value="0.62">Low</option>
+        <option value="0.27">Hgh</option>
+    </select>
+    </div>
+   
+    <div>
+    <label for="mui">MUI - Modified User Interaction</label>
+    <select id="mui">
+        <option value="1">Not Defined</option>
+        <option value="0.85">None</option>
+        <option value="0.62">Required</option>
+    </select>
+    </div>
+    
+    <div>    
+    <label for="ms">MS - Modified Scope</label>
+    <select id="ms">
+        <option value="1">Unchanged</option>
+        <option value="1">Changed</option>
+    </select>
+    </div>
+   
+    <div>
+    <label for="mc">MC - Modified Confidentiality</label>
+    <select id="mc">
+        <option value="1">Not Defined</option>
+        <option value="0.56">High</option>
+        <option value="0.22">Low</option>
+        <option value="0">None</option>
+    </select>
+    </div>
+    
+    <div>
+    <label for="mi">MI - Modified Integrity</label>
+    <select id="mi">
+        <option value="1">Not Defined</option>
+        <option value="0.56">High</option>
+        <option value="0.22">Low</option>
+        <option value="0">None</option>
+    </select>
+    </div>
+
+    <div>
+    <label for="ma">MA - Modified Availability</label>
+    <select id="ma">
+        <option value="1">Not Defined</option>
+        <option value="0.56">High</option>
+        <option value="0.22">Low</option>
+        <option value="0">None</option>
+    </select>
+    </div>
+
+    <!-- Display results -->
+    <hr>
+    <h2>Equações das Métricas Base</h2>
+    <p><strong>MISS:</strong> <span id="miss">0</span></p>
+    <p><strong>Modified Impact (MImp):</strong> <span id="mimp">0</span></p>
+    <p><strong>Modified Exploitability (MExp):</strong> <span id="mexp">0</span></p>
+    <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
+
   <!-- JavaScript to calculate metrics -->
     <script>
-        // Reference to dropdowns and result fields
+        // Reference to dropdowns and result fields -- base
         const avDropdown = document.getElementById("av");
         const acDropdown = document.getElementById("ac");
         const prDropdown = document.getElementById("pr");
@@ -155,11 +274,30 @@
         const explField = document.getElementById("expl");
         const bsField = document.getElementById("bs");
 
+        // Reference to dropdowns and result fields -- temporal
         const ecmDropdown = document.getElementById("ecm");
         const rlDropdown = document.getElementById("rl");
         const rcDropdown = document.getElementById("rc");
 
         const tsField = document.getElementById("ts");
+
+        // Reference to dropdowns and result fields -- environmental
+        const crDropdown = document.getElementById("cr");
+        const irDropdown = document.getElementById("ir");
+        const arDropdown = document.getElementById("ar");
+        const mavDropdown = document.getElementById("mav");
+        const macDropdown = document.getElementById("mac");
+        const mprDropdown = document.getElementById("mpr");
+        const muiDropdown = document.getElementById("mui");
+        const msDropdown = document.getElementById("ms");
+        const mcDropdown = document.getElementById("mc");
+        const miDropdown = document.getElementById("mi");
+        const maDropdown = document.getElementById("ma");
+
+        const missField = document.getElementById("miss");
+        const mimpField = document.getElementById("mimp");
+        const mexpField = document.getElementById("mexp");
+        const esField = document.getElementById("es");
 
         function calculateMetrics() {
             const av = parseFloat(avDropdown.value);
@@ -170,10 +308,19 @@
             const c = parseFloat(cDropdown.value);
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
+
             const ecm = parseFloat(ecmDropdown.value);
             const rl = parseFloat(rlDropdown.value);
             const rc = parseFloat(rcDropdown.value);
             
+            const mav = parseFloat(mavDropdown.value);
+            const mac = parseFloat(macDropdown.value);
+            const mpr = parseFloat(mprDropdown.value);
+            const mui = parseFloat(muiDropdown.value);
+            const msValue = msDropdown.options[sDropdown.selectedIndex].text;  // Text value for "s"
+            const mc = parseFloat(mcDropdown.value);
+            const mi = parseFloat(miDropdown.value);
+            const ma = parseFloat(maDropdown.value);
 
 
             // Compute ISS, Impact, Exploitability, and BaseScore
@@ -205,7 +352,38 @@
             BS = Math.ceil(tempResult * 10) / 10;
             }
 
+            // Compute Temporal Score
             const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
+
+            // Compute MISS, MImp, MExp, EnvironmentalScore
+            const MISS = Math.min((1 - ((1 - cr * mc)*(1 - ir * mi)*(1 - ar * ma))), 0.915);
+
+            let MImp;
+            if (msValue === "Unchanged") {
+                MImp = 6.42 * MISS;
+            } else {
+                MImp = 7.52 * (MISS - 0.029) - 3.25 * Math.pow(MISS - 0.02, 13);
+            }
+
+            const MExp = 8.22 * mav * mac * mpr * mui;
+
+            let ES;
+            if (MImp === 0) {
+                ES = 0;
+            } else if (msValue === "Unchanged") {
+            let tempResult = MImp + MExp;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            ES = Math.ceil(tempResult * ecm * rl * rc * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (MImp + MExp);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            ES = Math.ceil(tempResult * ecm * rl * rc * 10) / 10;
+            }
+
 
             // Update fields
             issField.textContent = ISS.toFixed(2);
@@ -213,6 +391,10 @@
             explField.textContent = Expl.toFixed(2);
             bsField.textContent = BS.toFixed(2);
             tsField.textContent = TS.toFixed(2);
+            missField.textContent = MISS.toFixed(2);
+            mimpField.textContent = MImp.toFixed(2);
+            mexpField.textContent = MExp.toFixed(2);
+            esField.textContent = ES.toFixed(2);
         }
 
 // Attach event listener to dropdowns
@@ -228,6 +410,18 @@
         rlDropdown.addEventListener("change", calculateMetrics);
         rcDropdown.addEventListener("change", calculateMetrics);
         limitToTenCheckbox.addEventListener("change", calculateMetrics);
+
+        mavDropdown.addEventListener("change", calculateMetrics);
+        macDropdown.addEventListener("change", calculateMetrics);
+        mprDropdown.addEventListener("change", calculateMetrics);
+        muiDropdown.addEventListener("change", calculateMetrics);
+        msDropdown.addEventListener("change", calculateMetrics);
+        mcDropdown.addEventListener("change", calculateMetrics);
+        miDropdown.addEventListener("change", calculateMetrics);
+        maDropdown.addEventListener("change", calculateMetrics);
+        crDropdown.addEventListener("change", calculateMetrics);
+        irDropdown.addEventListener("change", calculateMetrics);
+        arDropdown.addEventListener("change", calculateMetrics);
 
         // Initial calculation
         calculateMetrics();
