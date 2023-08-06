@@ -1,22 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dropdown to Textbox</title>
+    <title>CVSS Calculator</title>
 </head>
-
 <body>
-    <select id="yesNoDropdown">
-        <option value="1">Yes</option>
-        <option value="0">No</option>
+    <!-- Dropdowns for variables -->
+    <label for="av">AV - Attack Vector</label>
+    <select id="av">
+        <option value="0.85">Network</option>
+        <option value="0.62">Adjacent</option>
+        <option value="0.55">Local</option>
+        <option value="0.2">Physical</option>
+    </select>
+        <label for="ac">AC - Attack Complexity</label>
+    <select id="ac">
+        <option value="0.44">High</option>
+        <option value="0.77">Low</option>
+    </select>
+        <label for="pr">PR - Privileges Required</label>
+    <select id="pr">
+        <option value="0.85">None</option>
+        <option value="0.62">Low</option>
+        <option value="0.27">Hgh</option>
+    </select>
+        <label for="ui">UI - User Interaction</label>
+    <select id="ui">
+        <option value="0.85">None</option>
+        <option value="0.62">Required</option>
+    </select>
+        <label for="s">S - Scope</label>
+    <select id="s">
+        <option value="1">Unchanged</option>
+        <option value="1">Changed</option>
+    </select>
+        <label for="c">C - Confidentiality</label>
+    <select id="c">
+        <option value="0">None</option>
+        <option value="0.22">Low</option>
+        <option value="0.56">Hgh</option>
+    </select>
+        <label for="i">I - Integrity</label>
+    <select id="i">
+        <option value="0">None</option>
+        <option value="0.22">Low</option>
+        <option value="0.56">Hgh</option>
+    </select>
+        <label for="a">A - Availability</label>
+    <select id="a">
+        <option value="0">None</option>
+        <option value="0.22">Low</option>
+        <option value="0.56">Hgh</option>
     </select>
 
-    <input type="text" id="outputTextbox" readonly>
+    <!-- Display results -->
+    <hr>
+    <p><strong>ISS:</strong> <span id="iss">0</span></p>
+    <p><strong>Impact (Imp):</strong> <span id="imp">0</span></p>
+    <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
+    <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
 
-    <script src="script.js"></script>
+    <!-- JavaScript to calculate metrics -->
+    <script>
+        // Reference to dropdowns and result fields
+        const avDropdown = document.getElementById("av");
+        const avDropdown = document.getElementById("ac");
+        const avDropdown = document.getElementById("pr");
+        const avDropdown = document.getElementById("ui");
+        const avDropdown = document.getElementById("s");
+        const avDropdown = document.getElementById("c");
+        const avDropdown = document.getElementById("i");
+        const avDropdown = document.getElementById("a");
+        // ... [Reference the rest of the dropdowns similarly] ...
+        const issField = document.getElementById("iss");
+        const impField = document.getElementById("imp");
+        const explField = document.getElementById("expl");
+        const bsField = document.getElementById("bs");
+
+        function calculateMetrics() {
+            const av = parseFloat(avDropdown.value);
+            const av = parseFloat(acDropdown.value);
+            const av = parseFloat(prDropdown.value);
+            const av = parseFloat(uiDropdown.value);
+            const av = parseFloat(sDropdown.value);
+            const av = parseFloat(cDropdown.value);
+            const av = parseFloat(iDropdown.value);
+            const av = parseFloat(aDropdown.value);
+
+            // Compute ISS, Impact, Exploitability, and BaseScore
+            const ISS = 1 - ((1-c)*(1-i)*(1-a));
+            let Imp;
+            if (s === "Unchanged") {
+                Imp = 6.42 * ISS;
+            } else {
+                Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS, 15);
+            }
+            const Expl = 8.22 * av * ac * pr * ui;
+            let BS;
+            if (Imp === 0) {
+                BS = 0;
+            } else if (s === "Unchanged") {
+                BS = Math.min(Imp + Expl, 10);
+            } else {
+                BS = Math.min(1.08*(Imp + Expl), 10);
+            }
+
+            // Update fields
+            issField.textContent = ISS.toFixed(2);
+            impField.textContent = Imp.toFixed(2);
+            explField.textContent = Expl.toFixed(2);
+            bsField.textContent = BS.toFixed(2);
+        }
+
+        // Attach event listener to dropdowns
+        avDropdown.addEventListener("change", calculateMetrics);
+        acDropdown.addEventListener("change", calculateMetrics);
+        prDropdown.addEventListener("change", calculateMetrics);
+        uiDropdown.addEventListener("change", calculateMetrics);
+        sDropdown.addEventListener("change", calculateMetrics);
+        cDropdown.addEventListener("change", calculateMetrics);
+        iDropdown.addEventListener("change", calculateMetrics);
+        aDropdown.addEventListener("change", calculateMetrics);
+
+        // Initial calculation
+        calculateMetrics();
+    </script>
 </body>
-
 </html>
