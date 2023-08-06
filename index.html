@@ -61,18 +61,18 @@
     <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
     <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
 
-    <!-- JavaScript to calculate metrics -->
+  <!-- JavaScript to calculate metrics -->
     <script>
         // Reference to dropdowns and result fields
         const avDropdown = document.getElementById("av");
-        const avDropdown = document.getElementById("ac");
-        const avDropdown = document.getElementById("pr");
-        const avDropdown = document.getElementById("ui");
-        const avDropdown = document.getElementById("s");
-        const avDropdown = document.getElementById("c");
-        const avDropdown = document.getElementById("i");
-        const avDropdown = document.getElementById("a");
-        // ... [Reference the rest of the dropdowns similarly] ...
+        const acDropdown = document.getElementById("ac");
+        const prDropdown = document.getElementById("pr");
+        const uiDropdown = document.getElementById("ui");
+        const sDropdown = document.getElementById("s");
+        const cDropdown = document.getElementById("c");
+        const iDropdown = document.getElementById("i");
+        const aDropdown = document.getElementById("a");
+
         const issField = document.getElementById("iss");
         const impField = document.getElementById("imp");
         const explField = document.getElementById("expl");
@@ -80,18 +80,18 @@
 
         function calculateMetrics() {
             const av = parseFloat(avDropdown.value);
-            const av = parseFloat(acDropdown.value);
-            const av = parseFloat(prDropdown.value);
-            const av = parseFloat(uiDropdown.value);
-            const av = parseFloat(sDropdown.value);
-            const av = parseFloat(cDropdown.value);
-            const av = parseFloat(iDropdown.value);
-            const av = parseFloat(aDropdown.value);
+            const ac = parseFloat(acDropdown.value);
+            const pr = parseFloat(prDropdown.value);
+            const ui = parseFloat(uiDropdown.value);
+            const sValue = sDropdown.options[sDropdown.selectedIndex].text;  // Get the text value for "s"
+            const c = parseFloat(cDropdown.value);
+            const i = parseFloat(iDropdown.value);
+            const a = parseFloat(aDropdown.value);
 
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
             let Imp;
-            if (s === "Unchanged") {
+            if (sValue === "Unchanged") {
                 Imp = 6.42 * ISS;
             } else {
                 Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS, 15);
@@ -100,7 +100,7 @@
             let BS;
             if (Imp === 0) {
                 BS = 0;
-            } else if (s === "Unchanged") {
+            } else if (sValue === "Unchanged") {
                 BS = Math.min(Imp + Expl, 10);
             } else {
                 BS = Math.min(1.08*(Imp + Expl), 10);
@@ -113,7 +113,7 @@
             bsField.textContent = BS.toFixed(2);
         }
 
-        // Attach event listener to dropdowns
+// Attach event listener to dropdowns
         avDropdown.addEventListener("change", calculateMetrics);
         acDropdown.addEventListener("change", calculateMetrics);
         prDropdown.addEventListener("change", calculateMetrics);
