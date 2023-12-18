@@ -11,37 +11,36 @@
             font-size: 0.8em;
             text-align: right;
         }
+        .slider-label {
+            display: block;
+            margin-top: 10px;
+        }
         .custom-range {
             width: 100%;
-        }
-        .form-group {
-            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
         <h1 class="text-center mb-4">CVSS Calculator - v2</h1>
-
         <div class="row">
+            <!-- Base Metrics -->
             <div class="col-md-6">
-                <!-- Base Metrics Section -->
                 <h2>Métricas Base</h2>
-                <!-- Dropdowns and Sliders for Base Metrics -->
-                <!-- Each dropdown and slider in a form-group for better spacing -->
-                <!-- Repeat for each dropdown and slider -->
-
                 <div class="form-group">
                     <label for="av">AV - Attack Vector</label>
                     <select id="av" class="form-control">
-                            <option value="0.85">Network</option>
-                            <option value="0.62">Adjacent</option>
-                            <option value="0.55">Local</option>
-                            <option value="0.2">Physical</option>
+                        <option value="0.85">Network</option>
+                        <!-- other options -->
                     </select>
                 </div>
+                <!-- Repeat for other dropdowns -->
 
-                <!-- Repeat for other dropdowns and sliders -->
+                <!-- Sliders and Textboxes -->
+                <label class="slider-label" for="cSlider">C - Confidentiality</label>
+                <input type="range" id="cSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                <span id="cValue">p=0.95</span>
+                <!-- Repeat for other sliders -->
 
                 <!-- Checkbox -->
                 <div class="form-check mb-4">
@@ -49,57 +48,265 @@
                     <label for="limitToTen" class="form-check-label">Limit to 10</label>
                 </div>
 
-                <!-- Results for Base Metrics -->
-                <h3>Equações das Métricas Base</h3>
+                <!-- Base Metrics Results -->
+                <h3>Results - Métricas Base</h3>
                 <p><strong>ISS Lower Bound:</strong> <span id="issLower">0</span></p>
                 <!-- Repeat for other results -->
-
             </div>
 
+            <!-- Temporal Metrics -->
             <div class="col-md-6">
-                <!-- Temporal Metrics Section -->
                 <h2>Métricas Temporais</h2>
-                <!-- Dropdowns for Temporal Metrics -->
-                <!-- Repeat form-group structure as above -->
-
                 <div class="form-group">
                     <label for="ecm">ECM - Exploit Code Maturity</label>
                     <select id="ecm" class="form-control">
-                        <!-- options as before -->
+                        <!-- options -->
                     </select>
                 </div>
-
                 <!-- Repeat for other dropdowns -->
 
-                <!-- Results for Temporal Metrics -->
-                <h3>Equações das Métricas Temporais</h3>
+                <!-- Temporal Metrics Results -->
+                <h3>Results - Métricas Temporais</h3>
                 <p><strong>Temporal Score (TS):</strong> <span id="ts">0</span></p>
 
-                <!-- Environmental Metrics Section -->
-                <h2>Equações das Métricas Ambientais</h2>
-                <!-- Dropdowns for Environmental Metrics -->
-                <!-- Repeat form-group structure as above -->
-
+                <!-- Environmental Metrics -->
+                <h2>Métricas Ambientais</h2>
                 <div class="form-group">
                     <label for="cr">CR - Confidentiality Report</label>
                     <select id="cr" class="form-control">
-                        <!-- options as before -->
+                        <!-- options -->
                     </select>
                 </div>
-
                 <!-- Repeat for other dropdowns -->
 
-                <!-- Results for Environmental Metrics -->
-                <h3>Environmental Score</h3>
+                <!-- Environmental Metrics Results -->
+                <h3>Results - Métricas Ambientais</h3>
                 <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript as before -->
+ <!-- JavaScript to calculate metrics -->
     <script>
-        // Your existing JavaScript code remains the same
-    </script>
+        // Reference to dropdowns and result fields -- base
+        const avDropdown = document.getElementById("av");
+        const acDropdown = document.getElementById("ac");
+        const prDropdown = document.getElementById("pr");
+        const uiDropdown = document.getElementById("ui");
+        const sDropdown = document.getElementById("s");
+        const cDropdown = document.getElementById("c");
+        const iDropdown = document.getElementById("i");
+        const aDropdown = document.getElementById("a");
+        const limitToTenCheckbox = document.getElementById("limitToTen");
+
+        const cSlider = document.getElementById("cSlider");
+        const iSlider = document.getElementById("iSlider");
+        const aSlider = document.getElementById("aSlider");
+
+        const cValueSpan = document.getElementById("cValue");
+        const iValueSpan = document.getElementById("iValue");
+        const aValueSpan = document.getElementById("aValue");
+
+        const issField = document.getElementById("iss");
+        const impField = document.getElementById("imp");
+        const explField = document.getElementById("expl");
+        const bsField = document.getElementById("bs");
+
+        const issLowerField = document.getElementById("issLower");
+        const issUpperField = document.getElementById("issUpper");
+
+        // Reference to dropdowns and result fields -- temporal
+        const ecmDropdown = document.getElementById("ecm");
+        const rlDropdown = document.getElementById("rl");
+        const rcDropdown = document.getElementById("rc");
+
+        const tsField = document.getElementById("ts");
+
+        // Reference to dropdowns and result fields -- environmental
+        const crDropdown = document.getElementById("cr");
+        const irDropdown = document.getElementById("ir");
+        const arDropdown = document.getElementById("ar");
+        const mavDropdown = document.getElementById("mav");
+        const macDropdown = document.getElementById("mac");
+        const mprDropdown = document.getElementById("mpr");
+        const muiDropdown = document.getElementById("mui");
+        const msDropdown = document.getElementById("ms");
+        const mcDropdown = document.getElementById("mc");
+        const miDropdown = document.getElementById("mi");
+        const maDropdown = document.getElementById("ma");
+
+        const missField = document.getElementById("miss");
+        const mimpField = document.getElementById("mimp");
+        const mexpField = document.getElementById("mexp");
+        const esField = document.getElementById("es");
+
+        function calculateMinValue(sliderValue, boxValue, noneOrLowValue, highValue) {
+            if (boxValue === 0 || boxValue === 0.22) { // Assuming 'None' is 0 and 'Low' is 0.22
+                return boxValue;
+            }
+            return sliderValue * highValue + (1 - sliderValue) * noneOrLowValue;
+        }
+
+        function calculateMetrics() {
+            const av = parseFloat(avDropdown.value);
+            const ac = parseFloat(acDropdown.value);
+            const pr = parseFloat(prDropdown.value);
+            const ui = parseFloat(uiDropdown.value);
+            const sValue = sDropdown.options[sDropdown.selectedIndex].text;  // Text value for "s"
+            const c = parseFloat(cDropdown.value);
+            const i = parseFloat(iDropdown.value);
+            const a = parseFloat(aDropdown.value);
+
+            //cValue.textContent = `p=${cSlider.toFixed(2)}`;
+            //iValue.textContent = `p=${iSlider.toFixed(2)}`;
+            //aValue.textContent = `p=${aSlider.toFixed(2)}`;
+            cValueSpan.textContent = `p=${parseFloat(cSlider.value).toFixed(2)}`;
+            iValueSpan.textContent = `p=${parseFloat(iSlider.value).toFixed(2)}`;
+            aValueSpan.textContent = `p=${parseFloat(aSlider.value).toFixed(2)}`;
+
+
+            const ecm = parseFloat(ecmDropdown.value);
+            const rl = parseFloat(rlDropdown.value);
+            const rc = parseFloat(rcDropdown.value);
+            
+            const mav = parseFloat(mavDropdown.value);
+            const mac = parseFloat(macDropdown.value);
+            const mpr = parseFloat(mprDropdown.value);
+            const mui = parseFloat(muiDropdown.value);
+            const msValue = msDropdown.options[sDropdown.selectedIndex].text;  // Text value for "s"
+            const mc = parseFloat(mcDropdown.value);
+            const mi = parseFloat(miDropdown.value);
+            const ma = parseFloat(maDropdown.value);
+
+            const cr = parseFloat(mcDropdown.value);
+            const ir = parseFloat(miDropdown.value);
+            const ar = parseFloat(maDropdown.value);
+
+            const cMin = calculateMinValue(parseFloat(cSlider.value), parseFloat(cDropdown.value), 0.22, 0.56);
+            const iMin = calculateMinValue(parseFloat(iSlider.value), parseFloat(iDropdown.value), 0.22, 0.56);
+            const aMin = calculateMinValue(parseFloat(aSlider.value), parseFloat(aDropdown.value), 0.22, 0.56);
+
+
+
+
+
+
+            // Compute ISS, Impact, Exploitability, and BaseScore
+            const ISS = 1 - ((1-c)*(1-i)*(1-a));
+            const ISSLowerBound = 1 - Math.abs((1 - cMin) * (1 - iMin) * (1 - aMin));
+            const ISSUpperBound = 1 - ((1 - c) * (1 - i) * (1 - a));
+
+            issLowerField.textContent = ISSLowerBound.toFixed(2);
+            issUpperField.textContent = ISSUpperBound.toFixed(2);
+
+
+            let Imp;
+            if (sValue === "Unchanged") {
+                Imp = 6.42 * ISS;
+            } else {
+                Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS-0.02, 15);
+            }
+
+            const Expl = 8.22 * av * ac * pr * ui;
+
+            let BS;
+            if (Imp === 0) {
+                BS = 0;
+            } else if (sValue === "Unchanged") {
+            let tempResult = Imp + Expl;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BS = Math.ceil(tempResult * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (Imp + Expl);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BS = Math.ceil(tempResult * 10) / 10;
+            }
+
+            // Compute Temporal Score
+            const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
+
+            // Compute MISS, MImp, MExp, EnvironmentalScore
+            const MISS = Math.min(1 - ((1 - cr * mc) * (1 - ir * mi) * (1 - ar * ma)), 0.915);
+
+            let MImp;
+            if (msValue === "Unchanged") {
+                MImp = 6.42 * MISS;
+            } else {
+                MImp = 7.52 * (MISS - 0.029) - 3.25 * Math.pow(MISS - 0.02, 13);
+            }
+
+            const MExp = 8.22 * mav * mac * mpr * mui;
+
+            let ES;
+            if (MImp === 0) {
+                ES = 0;
+            } else if (msValue === "Unchanged") {
+            let tempResult = MImp + MExp;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            ES = Math.ceil(tempResult * ecm * rl * rc * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (MImp + MExp);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            ES = Math.ceil(tempResult * ecm * rl * rc * 10) / 10;
+            }
+
+
+            // Update fields
+            issLowerField.textContent = ISSLowerBound.toFixed(2);
+            issUpperField.textContent = ISSUpperBound.toFixed(2);
+            //issField.textContent = ISS.toFixed(2);
+            impField.textContent = Imp.toFixed(2);
+            explField.textContent = Expl.toFixed(2);
+            bsField.textContent = BS.toFixed(2);
+            tsField.textContent = TS.toFixed(2);
+            missField.textContent = MISS.toFixed(2);
+            mimpField.textContent = MImp.toFixed(2);
+            mexpField.textContent = MExp.toFixed(2);
+            esField.textContent = ES.toFixed(2);
+        }
+
+// Attach event listener to dropdowns
+        avDropdown.addEventListener("change", calculateMetrics);
+        acDropdown.addEventListener("change", calculateMetrics);
+        prDropdown.addEventListener("change", calculateMetrics);
+        uiDropdown.addEventListener("change", calculateMetrics);
+        sDropdown.addEventListener("change", calculateMetrics);
+        cDropdown.addEventListener("change", calculateMetrics);
+        iDropdown.addEventListener("change", calculateMetrics);
+        aDropdown.addEventListener("change", calculateMetrics);
+        ecmDropdown.addEventListener("change", calculateMetrics);
+        rlDropdown.addEventListener("change", calculateMetrics);
+        rcDropdown.addEventListener("change", calculateMetrics);
+        limitToTenCheckbox.addEventListener("change", calculateMetrics);
+
+        mavDropdown.addEventListener("change", calculateMetrics);
+        macDropdown.addEventListener("change", calculateMetrics);
+        mprDropdown.addEventListener("change", calculateMetrics);
+        muiDropdown.addEventListener("change", calculateMetrics);
+        msDropdown.addEventListener("change", calculateMetrics);
+        mcDropdown.addEventListener("change", calculateMetrics);
+        miDropdown.addEventListener("change", calculateMetrics);
+        maDropdown.addEventListener("change", calculateMetrics);
+        crDropdown.addEventListener("change", calculateMetrics);
+        irDropdown.addEventListener("change", calculateMetrics);
+        arDropdown.addEventListener("change", calculateMetrics);
+
+        cSlider.addEventListener("input", calculateMetrics);
+        iSlider.addEventListener("input", calculateMetrics);
+        aSlider.addEventListener("input", calculateMetrics);
+
+
+
+        // Initial calculation
+        calculateMetrics();
 
     <footer class="version">
         Version 0.03
