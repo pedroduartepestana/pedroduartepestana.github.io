@@ -99,7 +99,8 @@
     <!-- Display results -->
     <hr>
     <h2>Equações das Métricas Base</h2>
-    <p><strong>ISS:</strong> <span id="iss">0</span></p>
+    <p><strong>ISS Lower Bound:</strong> <span id="issLower">0</span></p>
+    <p><strong>ISS Upper Bound:</strong> <span id="issUpper">0</span></p>
     <p><strong>Impact (Imp):</strong> <span id="imp">0</span></p>
     <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
     <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
@@ -289,6 +290,9 @@
         const explField = document.getElementById("expl");
         const bsField = document.getElementById("bs");
 
+        const issLowerField = document.getElementById("issLower");
+        const issUpperField = document.getElementById("issUpper");
+
         // Reference to dropdowns and result fields -- temporal
         const ecmDropdown = document.getElementById("ecm");
         const rlDropdown = document.getElementById("rl");
@@ -313,6 +317,13 @@
         const mimpField = document.getElementById("mimp");
         const mexpField = document.getElementById("mexp");
         const esField = document.getElementById("es");
+
+        function calculateMinValue(sliderValue, boxValue, noneOrLowValue, highValue) {
+            if (boxValue === 0 || boxValue === 0.22) { // Assuming 'None' is 0 and 'Low' is 0.22
+                return boxValue;
+            }
+            return sliderValue * highValue + (1 - sliderValue) * noneOrLowValue;
+        }
 
         function calculateMetrics() {
             const av = parseFloat(avDropdown.value);
@@ -345,9 +356,22 @@
             const ir = parseFloat(miDropdown.value);
             const ar = parseFloat(maDropdown.value);
 
+            const cMin = calculateMinValue(parseFloat(cSlider.value), cDropdown.value, 0.22, 0.56);
+            const iMin = calculateMinValue(parseFloat(iSlider.value), iDropdown.value,  0.22, 0.56);
+            const aMin = calculateMinValue(parseFloat(aSlider.value), aDropdown.value, 0.22, 0.56);
+
+
+
+
 
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
+            const ISSLowerBound = 1 - Math.abs((1 - cMin) * (1 - iMin) * (1 - aMin));
+            const ISSUpperBound = 1 - ((1 - c) * (1 - i) * (1 - a));
+
+            issLowerField.textContent = ISSLowerBound.toFixed(2);
+            issUpperField.textContent = ISSUpperBound.toFixed(2);
+
 
             let Imp;
             if (sValue === "Unchanged") {
