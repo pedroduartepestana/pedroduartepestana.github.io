@@ -324,9 +324,9 @@
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
 
-            cValueSpan.textContent = `p=${cSlider.toFixed(2)}`;
-            iValueSpan.textContent = `p=${iSlider.toFixed(2)}`;
-            aValueSpan.textContent = `p=${aSlider.toFixed(2)}`;
+            cValue.textContent = `p=${cSlider.toFixed(2)}`;
+            iValue.textContent = `p=${iSlider.toFixed(2)}`;
+            aValue.textContent = `p=${aSlider.toFixed(2)}`;
 
             const ecm = parseFloat(ecmDropdown.value);
             const rl = parseFloat(rlDropdown.value);
@@ -450,9 +450,7 @@
         iSlider.addEventListener("input", calculateMetrics);
         aSlider.addEventListener("input", calculateMetrics);
 
-        cSlider.addEventListener("input", calculateMetrics);
-        iSlider.addEventListener("input", calculateMetrics);
-        aSlider.addEventListener("input", calculateMetrics);
+
 
         // Initial calculation
         calculateMetrics();
