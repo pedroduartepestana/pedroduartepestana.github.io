@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVSS Calculator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .version {
+            font-size: 0.8em;
+            text-align: right;
+        }
+        .custom-range {
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">CVSS Calculator - v2</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Base Metrics Section -->
+                <h2>Métricas Base</h2>
+                <!-- Dropdowns and Sliders for Base Metrics -->
+                <!-- Each dropdown and slider in a form-group for better spacing -->
+                <!-- Repeat for each dropdown and slider -->
+
+                <div class="form-group">
+                    <label for="av">AV - Attack Vector</label>
+                    <select id="av" class="form-control">
+                        <!-- options as before -->
+                    </select>
+                </div>
+
+                <!-- Repeat for other dropdowns and sliders -->
+
+                <!-- Checkbox -->
+                <div class="form-check mb-4">
+                    <input type="checkbox" id="limitToTen" class="form-check-input" checked>
+                    <label for="limitToTen" class="form-check-label">Limit to 10</label>
+                </div>
+
+                <!-- Results for Base Metrics -->
+                <h3>Equações das Métricas Base</h3>
+                <p><strong>ISS Lower Bound:</strong> <span id="issLower">0</span></p>
+                <!-- Repeat for other results -->
+
+            </div>
+
+            <div class="col-md-6">
+                <!-- Temporal Metrics Section -->
+                <h2>Métricas Temporais</h2>
+                <!-- Dropdowns for Temporal Metrics -->
+                <!-- Repeat form-group structure as above -->
+
+                <div class="form-group">
+                    <label for="ecm">ECM - Exploit Code Maturity</label>
+                    <select id="ecm" class="form-control">
+                        <!-- options as before -->
+                    </select>
+                </div>
+
+                <!-- Repeat for other dropdowns -->
+
+                <!-- Results for Temporal Metrics -->
+                <h3>Equações das Métricas Temporais</h3>
+                <p><strong>Temporal Score (TS):</strong> <span id="ts">0</span></p>
+
+                <!-- Environmental Metrics Section -->
+                <h2>Equações das Métricas Ambientais</h2>
+                <!-- Dropdowns for Environmental Metrics -->
+                <!-- Repeat form-group structure as above -->
+
+                <div class="form-group">
+                    <label for="cr">CR - Confidentiality Report</label>
+                    <select id="cr" class="form-control">
+                        <!-- options as before -->
+                    </select>
+                </div>
+
+                <!-- Repeat for other dropdowns -->
+
+                <!-- Results for Environmental Metrics -->
+                <h3>Environmental Score</h3>
+                <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript as before -->
+    <script>
+        // Your existing JavaScript code remains the same
+    </script>
+
+    <footer class="version">
+        Version 0.03
+    </footer>
+</body>
+</html>
