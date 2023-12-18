@@ -67,6 +67,7 @@
         <option value="0">None</option>
     </select>
      <input type="range" id="cSlider" min="0" max="1" step="0.01" value="0.95">
+     <span id="cValue">p=0.95</span>
     </div>
     
     <div>
@@ -77,6 +78,7 @@
         <option value="0">None</option>
     </select>
     <input type="range" id="iSlider" min="0" max="1" step="0.01" value="0.95">
+    <span id="iValue">p=0.95</span>
     </div>
 
     <div>
@@ -87,6 +89,7 @@
         <option value="0">None</option>
     </select>
     <input type="range" id="aSlider" min="0" max="1" step="0.01" value="0.95">
+    <span id="aValue">p=0.95</span>
     </div>
 
     <label for="limitToTen">Limit to 10:</label>
@@ -277,6 +280,10 @@
         const iSlider = document.getElementById("iSlider");
         const aSlider = document.getElementById("aSlider");
 
+        const cValueSpan = document.getElementById("cValue");
+        const iValueSpan = document.getElementById("iValue");
+        const aValueSpan = document.getElementById("aValue");
+
         const issField = document.getElementById("iss");
         const impField = document.getElementById("imp");
         const explField = document.getElementById("expl");
@@ -316,6 +323,10 @@
             const c = parseFloat(cDropdown.value);
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
+
+            cValueSpan.textContent = `p=${c.toFixed(2)}`;
+            iValueSpan.textContent = `p=${i.toFixed(2)}`;
+            aValueSpan.textContent = `p=${a.toFixed(2)}`;
 
             const ecm = parseFloat(ecmDropdown.value);
             const rl = parseFloat(rlDropdown.value);
@@ -434,6 +445,10 @@
         crDropdown.addEventListener("change", calculateMetrics);
         irDropdown.addEventListener("change", calculateMetrics);
         arDropdown.addEventListener("change", calculateMetrics);
+
+        cSlider.addEventListener("input", calculateMetrics);
+        iSlider.addEventListener("input", calculateMetrics);
+        aSlider.addEventListener("input", calculateMetrics);
 
         cSlider.addEventListener("input", calculateMetrics);
         iSlider.addEventListener("input", calculateMetrics);
