@@ -340,6 +340,39 @@
             return sliderValue * highValue + (1 - sliderValue) * noneOrLowValue;
         }
 
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach event listener to dropdowns
+            avDropdown.addEventListener("change", calculateMetrics);
+            acDropdown.addEventListener("change", calculateMetrics);
+            prDropdown.addEventListener("change", calculateMetrics);
+            uiDropdown.addEventListener("change", calculateMetrics);
+            sDropdown.addEventListener("change", calculateMetrics);
+            cDropdown.addEventListener("change", calculateMetrics);
+            iDropdown.addEventListener("change", calculateMetrics);
+            aDropdown.addEventListener("change", calculateMetrics);
+            ecmDropdown.addEventListener("change", calculateMetrics);
+            rlDropdown.addEventListener("change", calculateMetrics);
+            rcDropdown.addEventListener("change", calculateMetrics);
+            limitToTenCheckbox.addEventListener("change", calculateMetrics);
+
+            mavDropdown.addEventListener("change", calculateMetrics);
+            macDropdown.addEventListener("change", calculateMetrics);
+            mprDropdown.addEventListener("change", calculateMetrics);
+            muiDropdown.addEventListener("change", calculateMetrics);
+            msDropdown.addEventListener("change", calculateMetrics);
+            mcDropdown.addEventListener("change", calculateMetrics);
+            miDropdown.addEventListener("change", calculateMetrics);
+            maDropdown.addEventListener("change", calculateMetrics);
+            crDropdown.addEventListener("change", calculateMetrics);
+            irDropdown.addEventListener("change", calculateMetrics);
+            arDropdown.addEventListener("change", calculateMetrics);
+
+            cSlider.addEventListener("input", calculateMetrics);
+            iSlider.addEventListener("input", calculateMetrics);
+            aSlider.addEventListener("input", calculateMetrics);
+
+        });
         function calculateMetrics() {
 
              // Log to check if function is being called
@@ -471,35 +504,7 @@
             esField.textContent = ES.toFixed(2);
         }
 
-// Attach event listener to dropdowns
-        avDropdown.addEventListener("change", calculateMetrics);
-        acDropdown.addEventListener("change", calculateMetrics);
-        prDropdown.addEventListener("change", calculateMetrics);
-        uiDropdown.addEventListener("change", calculateMetrics);
-        sDropdown.addEventListener("change", calculateMetrics);
-        cDropdown.addEventListener("change", calculateMetrics);
-        iDropdown.addEventListener("change", calculateMetrics);
-        aDropdown.addEventListener("change", calculateMetrics);
-        ecmDropdown.addEventListener("change", calculateMetrics);
-        rlDropdown.addEventListener("change", calculateMetrics);
-        rcDropdown.addEventListener("change", calculateMetrics);
-        limitToTenCheckbox.addEventListener("change", calculateMetrics);
 
-        mavDropdown.addEventListener("change", calculateMetrics);
-        macDropdown.addEventListener("change", calculateMetrics);
-        mprDropdown.addEventListener("change", calculateMetrics);
-        muiDropdown.addEventListener("change", calculateMetrics);
-        msDropdown.addEventListener("change", calculateMetrics);
-        mcDropdown.addEventListener("change", calculateMetrics);
-        miDropdown.addEventListener("change", calculateMetrics);
-        maDropdown.addEventListener("change", calculateMetrics);
-        crDropdown.addEventListener("change", calculateMetrics);
-        irDropdown.addEventListener("change", calculateMetrics);
-        arDropdown.addEventListener("change", calculateMetrics);
-
-        cSlider.addEventListener("input", calculateMetrics);
-        iSlider.addEventListener("input", calculateMetrics);
-        aSlider.addEventListener("input", calculateMetrics);
 
 
 
