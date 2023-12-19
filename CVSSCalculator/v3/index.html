@@ -353,9 +353,11 @@
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
 
+
             cValueSpan.textContent = `p=${parseFloat(cSlider.value).toFixed(2)}`;
             iValueSpan.textContent = `p=${parseFloat(iSlider.value).toFixed(2)}`;
             aValueSpan.textContent = `p=${parseFloat(aSlider.value).toFixed(2)}`;
+
 
             const ecm = parseFloat(ecmDropdown.value);
             const rl = parseFloat(rlDropdown.value);
@@ -370,9 +372,9 @@
             const mi = parseFloat(miDropdown.value);
             const ma = parseFloat(maDropdown.value);
 
-            const cr = parseFloat(mcDropdown.value);
-            const ir = parseFloat(miDropdown.value);
-            const ar = parseFloat(maDropdown.value);
+            const cr = parseFloat(crDropdown.value);
+            const ir = parseFloat(irDropdown.value);
+            const ar = parseFloat(arDropdown.value);
 
             const cMin = calculateMinValue(parseFloat(cSlider.value), parseFloat(cDropdown.value), 0.22, 0.56);
             const iMin = calculateMinValue(parseFloat(iSlider.value), parseFloat(iDropdown.value), 0.22, 0.56);
