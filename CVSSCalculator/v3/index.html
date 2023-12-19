@@ -137,10 +137,30 @@
                         <option value="1">High</option>
                     </select>
                 </div>
-                <!-- Repeat for other dropdowns -->
+                
+                <div class="form-group">
+                    <label for="rl">RL - Remediation Level</label>
+                    <select id="rl" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.95">Official Fix</option>
+                        <option value="0.96">Temporary Fix</option>
+                        <option value="0.97">Workaround</option>
+                        <option value="1">Unavailable</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rc">RC - Report Confidence</label>
+                    <select id="rc" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.92">Unknown</option>
+                        <option value="0.96">Reasonable</option>
+                        <option value="1">Confirmed</option>
+                    </select>
+                </div>
 
                 <!-- Temporal Metrics Results -->
-                <h3>Results - Métricas Temporais</h3>
+                <h3>Equações das Métricas Temporais</h3>
                 <p><strong>Temporal Score (TS):</strong> <span id="ts">0</span></p>
 
                 <!-- Environmental Metrics -->
