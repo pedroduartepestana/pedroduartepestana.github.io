@@ -31,16 +31,85 @@
                     <label for="av">AV - Attack Vector</label>
                     <select id="av" class="form-control">
                         <option value="0.85">Network</option>
-                        <!-- other options -->
+                        <option value="0.62">Adjacent</option>
+                        <option value="0.55">Local</option>
+                        <option value="0.2">Physical</option>
                     </select>
                 </div>
-                <!-- Repeat for other dropdowns -->
 
-                <!-- Sliders and Textboxes -->
-                <label class="slider-label" for="cSlider">C - Confidentiality</label>
-                <input type="range" id="cSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
-                <span id="cValue">p=0.95</span>
-                <!-- Repeat for other sliders -->
+                <div class="form-group">
+                    <label for="ac">AC - Attack Complexity</label>
+                        <select id="ac">
+                        <option value="0.44">High</option>
+                        <option value="0.77">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pr">PR - Privileges Required</label>
+                    <select id="pr">
+                        <option value="0.85">None</option>
+                        <option value="0.62">Low</option>
+                        <option value="0.27">Hgh</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="ui">UI - User Interaction</label>
+                    <select id="ui">
+                        <option value="0.85">None</option>
+                        <option value="0.62">Required</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="s">S - Scope</label>
+                    <select id="s">
+                        <option value="1">Unchanged</option>
+                        <option value="1">Changed</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="c">C - Confidentiality</label>
+                    <select id="c">
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                        <label class="slider-label" for="cSlider">C - Confidentiality</label>
+                        <input type="range" id="cSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                        <span id="cValue">p=0.95</span>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="i">I - Integrity</label>
+                    <select id="i">
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                    <label class="slider-label" for="iSlider">C - Confidentiality</label>
+                    <input type="range" id="iSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="iValue">p=0.95</span>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="a">A - Availability</label>
+                    <select id="a">
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                    <label class="slider-label" for="aSlider">C - Confidentiality</label>
+                    <input type="range" id="aSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="aValue">p=0.95</span>
+                </div>
 
                 <!-- Checkbox -->
                 <div class="form-check mb-4">
