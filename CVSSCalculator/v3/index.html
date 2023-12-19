@@ -342,7 +342,17 @@
 
         function calculateMetrics() {
 
-            console.log();
+             // Log to check if function is being called
+            console.log("calculateMetrics called");
+
+            // Log current values of sliders
+            console.log("Slider Values:", cSlider.value, iSlider.value, aSlider.value);
+
+            // ... rest of the function code ...
+
+            // Log calculated values (for example, ISS, Impact, etc.)
+            console.log("Calculated ISS Lower Bound:", ISSLowerBound);
+            console.log("Calculated ISS Upper Bound:", ISSUpperBound);
 
             const av = parseFloat(avDropdown.value);
             const ac = parseFloat(acDropdown.value);
