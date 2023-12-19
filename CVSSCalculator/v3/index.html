@@ -168,19 +168,121 @@
                 <div class="form-group">
                     <label for="cr">CR - Confidentiality Report</label>
                     <select id="cr" class="form-control">
-                        <!-- options -->
+                        <option value="1">Not Defined</option>
+                        <option value="0.5">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="1.5">High</option>
                     </select>
                 </div>
-                <!-- Repeat for other dropdowns -->
+
+                <div class="form-group">
+                    <label for="ir">IR - Integrity Requirement</label>
+                    <select id="ir" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.5">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="1.5">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ar">AR - Availability Requirement</label>
+                    <select id="ar" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.5">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="1.5">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mav">MAV - Modified Attack Vector</label>
+                    <select id="mav" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.85">Network</option>
+                        <option value="0.62">Adjacent</option>
+                        <option value="0.55">Local</option>
+                        <option value="0.2">Physical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mac">MAC - Modified Attack Complexity</label>
+                    <select id="mac" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.44">High</option>
+                        <option value="0.77">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mpr">MPR - Modified Privileges Required</label>
+                    <select id="mpr" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.85">None</option>
+                        <option value="0.62">Low</option>
+                        <option value="0.27">Hgh</option>
+                    </select>
+                </div>
+                   
+                <div class="form-group">
+                    <label for="mui">MUI - Modified User Interaction</label>
+                    <select id="mui" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.85">None</option>
+                        <option value="0.62">Required</option>
+                    </select>
+                </div>
+                    
+                <div class="form-group">  
+                    <label for="ms">MS - Modified Scope</label>
+                    <select id="ms" class="form-control">
+                        <option value="1">Unchanged</option>
+                        <option value="1">Changed</option>
+                    </select>
+                </div>
+                   
+                <div class="form-group">
+                    <label for="mc">MC - Modified Confidentiality</label>
+                    <select id="mc" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+                    
+                <div class="form-group">
+                    <label for="mi">MI - Modified Integrity</label>
+                    <select id="mi" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ma">MA - Modified Availability</label>
+                    <select id="ma" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
 
                 <!-- Environmental Metrics Results -->
-                <h3>Results - Métricas Ambientais</h3>
+                <h3>Equações das Métricas Ambientais</h3>
+                <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
+                <p><strong>Modified Impact (MImp):</strong> <span id="mimp">0</span></p>
+                <p><strong>Modified Exploitability (MExp):</strong> <span id="mexp">0</span></p>
                 <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
             </div>
         </div>
     </div>
 
- <!-- JavaScript to calculate metrics -->
+    <!-- JavaScript to calculate metrics -->
     <script>
         // Reference to dropdowns and result fields -- base
         const avDropdown = document.getElementById("av");
@@ -251,13 +353,9 @@
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
 
-            //cValue.textContent = `p=${cSlider.toFixed(2)}`;
-            //iValue.textContent = `p=${iSlider.toFixed(2)}`;
-            //aValue.textContent = `p=${aSlider.toFixed(2)}`;
             cValueSpan.textContent = `p=${parseFloat(cSlider.value).toFixed(2)}`;
             iValueSpan.textContent = `p=${parseFloat(iSlider.value).toFixed(2)}`;
             aValueSpan.textContent = `p=${parseFloat(aSlider.value).toFixed(2)}`;
-
 
             const ecm = parseFloat(ecmDropdown.value);
             const rl = parseFloat(rlDropdown.value);
@@ -280,11 +378,6 @@
             const iMin = calculateMinValue(parseFloat(iSlider.value), parseFloat(iDropdown.value), 0.22, 0.56);
             const aMin = calculateMinValue(parseFloat(aSlider.value), parseFloat(aDropdown.value), 0.22, 0.56);
 
-
-
-
-
-
             // Compute ISS, Impact, Exploitability, and BaseScore
             const ISS = 1 - ((1-c)*(1-i)*(1-a));
             const ISSLowerBound = 1 - Math.abs((1 - cMin) * (1 - iMin) * (1 - aMin));
@@ -292,7 +385,6 @@
 
             issLowerField.textContent = ISSLowerBound.toFixed(2);
             issUpperField.textContent = ISSUpperBound.toFixed(2);
-
 
             let Imp;
             if (sValue === "Unchanged") {
