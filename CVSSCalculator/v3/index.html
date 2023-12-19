@@ -39,7 +39,7 @@
 
                 <div class="form-group">
                     <label for="ac">AC - Attack Complexity</label>
-                        <select id="ac">
+                    <select id="ac" class="form-control">
                         <option value="0.44">High</option>
                         <option value="0.77">Low</option>
                     </select>
@@ -47,7 +47,7 @@
 
                 <div class="form-group">
                     <label for="pr">PR - Privileges Required</label>
-                    <select id="pr">
+                    <select id="pr" class="form-control">
                         <option value="0.85">None</option>
                         <option value="0.62">Low</option>
                         <option value="0.27">Hgh</option>
@@ -57,7 +57,7 @@
 
                 <div class="form-group">
                     <label for="ui">UI - User Interaction</label>
-                    <select id="ui">
+                    <select id="ui" class="form-control">
                         <option value="0.85">None</option>
                         <option value="0.62">Required</option>
                     </select>
@@ -66,7 +66,7 @@
 
                 <div class="form-group">
                     <label for="s">S - Scope</label>
-                    <select id="s">
+                    <select id="s" class="form-control">
                         <option value="1">Unchanged</option>
                         <option value="1">Changed</option>
                     </select>
@@ -75,7 +75,7 @@
 
                 <div class="form-group">
                     <label for="c">C - Confidentiality</label>
-                    <select id="c">
+                    <select id="c" class="form-control">
                         <option value="0.56">High</option>
                         <option value="0.22">Low</option>
                         <option value="0">None</option>
@@ -88,7 +88,7 @@
 
                 <div class="form-group">
                     <label for="i">I - Integrity</label>
-                    <select id="i">
+                    <select id="i" class="form-control">
                         <option value="0.56">High</option>
                         <option value="0.22">Low</option>
                         <option value="0">None</option>
@@ -101,7 +101,7 @@
 
                 <div class="form-group">
                     <label for="a">A - Availability</label>
-                    <select id="a">
+                    <select id="a" class="form-control">
                         <option value="0.56">High</option>
                         <option value="0.22">Low</option>
                         <option value="0">None</option>
@@ -111,16 +111,17 @@
                     <span id="aValue">p=0.95</span>
                 </div>
 
-                <!-- Checkbox -->
                 <div class="form-check mb-4">
                     <input type="checkbox" id="limitToTen" class="form-check-input" checked>
                     <label for="limitToTen" class="form-check-label">Limit to 10</label>
                 </div>
 
                 <!-- Base Metrics Results -->
-                <h3>Results - Métricas Base</h3>
+                <h3>Equações das Métricas Base</h3>
                 <p><strong>ISS Lower Bound:</strong> <span id="issLower">0</span></p>
-                <!-- Repeat for other results -->
+                <p><strong>Impact (Imp):</strong> <span id="imp">0</span></p>
+                <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
+                <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
             </div>
 
             <!-- Temporal Metrics -->
@@ -129,7 +130,11 @@
                 <div class="form-group">
                     <label for="ecm">ECM - Exploit Code Maturity</label>
                     <select id="ecm" class="form-control">
-                        <!-- options -->
+                        <option value="1">Not Defined</option>
+                        <option value="0.91">Unproven</option>
+                        <option value="0.94">Proof-of-concept</option>
+                        <option value="0.97">Functional</option>
+                        <option value="1">High</option>
                     </select>
                 </div>
                 <!-- Repeat for other dropdowns -->
