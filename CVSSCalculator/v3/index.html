@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h1 class="text-center mb-4">CVSS Calculator - v2</h1>
+        <h1 class="text-center mb-4">CVSS Calculator - v3</h1>
         <div class="row">
             <!-- Base Metrics -->
             <div class="col-md-6">
@@ -43,6 +43,8 @@
                         <option value="0.44">High</option>
                         <option value="0.77">Low</option>
                     </select>
+                    <input type="range" id="complexSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="complexValue">p=0.95</span>
                 </div>
 
                 <div class="form-group">
@@ -61,6 +63,8 @@
                         <option value="0.85">None</option>
                         <option value="0.62">Required</option>
                     </select>
+                    <input type="range" id="uiSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="uiValue">p=0.95</span>
                 </div>
 
 
@@ -70,6 +74,8 @@
                         <option value="1">Unchanged</option>
                         <option value="1">Changed</option>
                     </select>
+                    <input type="range" id="scopeSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="scopeValue">p=0.95</span>
                 </div>
 
 
@@ -115,10 +121,10 @@
 
                 <!-- Base Metrics Results -->
                 <h3>Equações das Métricas Base</h3>
-                <p><strong>ISS Lower Bound:</strong> <span id="issLower">0</span></p>
-                <p><strong>Impact (Imp):</strong> <span id="imp">0</span></p>
-                <p><strong>Exploitability (Expl):</strong> <span id="expl">0</span></p>
-                <p><strong>BaseScore (BS):</strong> <span id="bs">0</span></p>
+                <p><strong>ISS: </strong> <span id="issLower">0</span><strong> - </strong> <span id="issUpper">0</span></p>              
+                <p><strong>Impact:</strong> <span id="impLower">0</span><strong> - </strong> <span id="impUpper">0</span></p>
+                <p><strong>Exploitability (Expl):</strong> <span id="explLower">0</span> <strong> - </strong> <span id="expl">0</span></p>
+                <p><strong>BaseScore (BS):</strong> <span id="bsLower">0</span><strong> - </strong> <span id="bs">0</span></p>
             </div>
 
             <!-- Temporal Metrics -->
@@ -293,9 +299,17 @@
         const aDropdown = document.getElementById("a");
         const limitToTenCheckbox = document.getElementById("limitToTen");
 
+        const complexSlider = document.getElementById("complexSlider");
+        const uiSlider = document.getElementById("uiSlider");
+        const scopeSlider = document.getElementById("scopeSlider");
+
         const cSlider = document.getElementById("cSlider");
         const iSlider = document.getElementById("iSlider");
         const aSlider = document.getElementById("aSlider");
+
+        const complexValueSpan = document.getElementById("complexValue");
+        const uiValueSpan = document.getElementById("uiValue");
+        const scopeValueSpan = document.getElementById("scopeValue");
 
         const cValueSpan = document.getElementById("cValue");
         const iValueSpan = document.getElementById("iValue");
@@ -304,10 +318,15 @@
         const issField = document.getElementById("iss");
         const impField = document.getElementById("imp");
         const explField = document.getElementById("expl");
+        const explLowerField = document.getElementById("explLower");
         const bsField = document.getElementById("bs");
+        const bsLowerField = document.getElementById("bsLower");
 
         const issLowerField = document.getElementById("issLower");
         const issUpperField = document.getElementById("issUpper");
+
+        const impLowerField = document.getElementById("impLower");
+        const impUpperField = document.getElementById("impUpper");
 
         // Reference to dropdowns and result fields -- temporal
         const ecmDropdown = document.getElementById("ecm");
@@ -369,6 +388,10 @@
             irDropdown.addEventListener("change", calculateMetrics);
             arDropdown.addEventListener("change", calculateMetrics);
 
+            complexSlider.addEventListener("input", calculateMetrics);
+            uiSlider.addEventListener("input", calculateMetrics);
+            scopeSlider.addEventListener("input", calculateMetrics);
+
             cSlider.addEventListener("input", calculateMetrics);
             iSlider.addEventListener("input", calculateMetrics);
             aSlider.addEventListener("input", calculateMetrics);
@@ -384,9 +407,6 @@
 
             // ... rest of the function code ...
 
-            // Log calculated values (for example, ISS, Impact, etc.)
-            console.log("Calculated ISS Lower Bound:", ISSLowerBound);
-            console.log("Calculated ISS Upper Bound:", ISSUpperBound);
 
             const av = parseFloat(avDropdown.value);
             const ac = parseFloat(acDropdown.value);
@@ -397,6 +417,9 @@
             const i = parseFloat(iDropdown.value);
             const a = parseFloat(aDropdown.value);
 
+            complexValueSpan.textContent = `p=${parseFloat(complexSlider.value).toFixed(2)}`;
+            uiValueSpan.textContent = `p=${parseFloat(uiSlider.value).toFixed(2)}`;
+            scopeValueSpan.textContent = `p=${parseFloat(scopeSlider.value).toFixed(2)}`;
 
             cValueSpan.textContent = `p=${parseFloat(cSlider.value).toFixed(2)}`;
             iValueSpan.textContent = `p=${parseFloat(iSlider.value).toFixed(2)}`;
@@ -420,6 +443,10 @@
             const ir = parseFloat(irDropdown.value);
             const ar = parseFloat(arDropdown.value);
 
+            const complexMin = calculateMinValue(parseFloat(complexSlider.value), parseFloat(acDropdown.value), 0.22, 0.56);
+            const uiMin = calculateMinValue(parseFloat(uiSlider.value), parseFloat(uiDropdown.value), 0.22, 0.56);
+            const scopeMin = calculateMinValue(parseFloat(scopeSlider.value), parseFloat(sDropdown.value), 0.22, 0.56);
+
             const cMin = calculateMinValue(parseFloat(cSlider.value), parseFloat(cDropdown.value), 0.22, 0.56);
             const iMin = calculateMinValue(parseFloat(iSlider.value), parseFloat(iDropdown.value), 0.22, 0.56);
             const aMin = calculateMinValue(parseFloat(aSlider.value), parseFloat(aDropdown.value), 0.22, 0.56);
@@ -429,17 +456,27 @@
             const ISSLowerBound = 1 - Math.abs((1 - cMin) * (1 - iMin) * (1 - aMin));
             const ISSUpperBound = 1 - ((1 - c) * (1 - i) * (1 - a));
 
-            issLowerField.textContent = ISSLowerBound.toFixed(2);
-            issUpperField.textContent = ISSUpperBound.toFixed(2);
+            //issLowerField.textContent = ISSLowerBound.toFixed(2);
+            //issUpperField.textContent = ISSUpperBound.toFixed(2);
 
             let Imp;
+            let ImpLowerBound
+            let ImpUpperBound
             if (sValue === "Unchanged") {
                 Imp = 6.42 * ISS;
+                ImpLowerBound = 6.42 * ISSLowerBound;
+                ImpUpperBound = 6.42 * ISSUpperBound;
             } else {
                 Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS-0.02, 15);
+                ImpLowerBound = 7.52 * (ISSLowerBound-0.029) - 3.25 * Math.pow(ISSLowerBound-0.02, 15);
+                ImpUpperBound = 7.52 * (ISSUpperBound-0.029) - 3.25 * Math.pow(ISSUpperBound-0.02, 15);
             }
 
+            //impLowerField.textContent = ImpLowerBound.toFixed(2);
+            //impUpperField.textContent = ImpUpperBound.toFixed(2);
+
             const Expl = 8.22 * av * ac * pr * ui;
+            const ExplLower = 8.22 * av * complexMin * pr * uiMin;
 
             let BS;
             if (Imp === 0) {
@@ -457,6 +494,24 @@
             }
             BS = Math.ceil(tempResult * 10) / 10;
             }
+
+            let BSLower;
+            if (ImpLowerBound === 0) {
+                BSLower = 0;
+            } else if (sValue === "Unchanged") {
+            let tempResult = ImpLowerBound + ExplLower;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BSLower = Math.ceil(tempResult * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (ImpLowerBound + ExplLower);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BSLower = Math.ceil(tempResult * 10) / 10;
+            }
+
 
             // Compute Temporal Score
             const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
@@ -495,11 +550,15 @@
             issLowerField.textContent = ISSLowerBound.toFixed(2);
             issUpperField.textContent = ISSUpperBound.toFixed(2);
             //issField.textContent = ISS.toFixed(2);
-            impField.textContent = Imp.toFixed(2);
+            //impField.textContent = Imp.toFixed(2);
+            impLowerField.textContent = ImpLowerBound.toFixed(2);
+            impUpperField.textContent = ImpUpperBound.toFixed(2);
             explField.textContent = Expl.toFixed(2);
+            explLowerField.textContent = ExplLower.toFixed(2);
             bsField.textContent = BS.toFixed(2);
+            bsLowerField.textContent = BSLower.toFixed(2);
             tsField.textContent = TS.toFixed(2);
-            missField.textContent = MISS.toFixed(2);
+            //missField.textContent = MISS.toFixed(2);
             mimpField.textContent = MImp.toFixed(2);
             mexpField.textContent = MExp.toFixed(2);
             esField.textContent = ES.toFixed(2);
@@ -511,6 +570,7 @@
 
         // Initial calculation
         calculateMetrics();
+        </script>
 
     <footer class="version">
         Version 0.03
