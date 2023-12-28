@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Score Calculator - v3.1 Incorporating uncertainty</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .version {
+            font-size: 0.8em;
+            text-align: right;
+        }
+        .slider-label {
+            display: block;
+            margin-top: 10px;
+        }
+        .custom-range {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Base Score Calculator - v3.1 Incorporating uncertainty</h1>
+        <div class="row">
+            <!-- Base Metrics -->
+            <div class="col-md-6">
+                <h2>Base Metrics</h2>
+                <div class="form-group">
+                    <label for="av">AV - Attack Vector</label>
+                    <select id="av" class="form-control">
+                        <option value="0.85">Network</option>
+                        <option value="0.62">Adjacent</option>
+                        <option value="0.55">Local</option>
+                        <option value="0.2">Physical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ac">AC - Attack Complexity</label>
+                    <select id="ac" class="form-control">
+                        <option value="0.44">High</option>
+                        <option value="0.77">Low</option>
+                    </select>
+                    <input type="range" id="complexSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="complexValue">p=0.95</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="pr">PR - Privileges Required</label>
+                    <select id="pr" class="form-control">
+                        <option value="0.85">None</option>
+                        <option value="0.62">Low</option>
+                        <option value="0.27">Hgh</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ui">UI - User Interaction</label>
+                    <select id="ui" class="form-control">
+                        <option value="0.85">None</option>
+                        <option value="0.62">Required</option>
+                    </select>
+                    <input type="range" id="uiSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="uiValue">p=0.95</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="s">S - Scope</label>
+                    <select id="s" class="form-control">
+                        <option value="1">Unchanged</option>
+                        <option value="1">Changed</option>
+                    </select>
+                    <input type="range" id="scopeSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="scopeValue">p=0.95</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="c">C - Confidentiality</label>
+                    <select id="c" class="form-control">
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                        <input type="range" id="cSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                        <span id="cValue">p=0.95</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="i">I - Integrity</label>
+                    <select id="i" class="form-control">
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                    <input type="range" id="iSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="iValue">p=0.95</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="a">A - Availability</label>
+                    <select id="a" class="form-control">
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                    <input type="range" id="aSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="aValue">p=0.95</span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input type="checkbox" id="limitToTen" class="form-check-input" checked>
+                    <label for="limitToTen" class="form-check-label">Limit to 10</label>
+                </div>
+
+                <!-- Base Metrics Results -->
+                <h3>Base Metrics Results</h3>
+                <p><strong>ISS: </strong> <span id="issLower">0</span><strong> - </strong> <span id="issUpper">0</span></p>              
+                <p><strong>Impact:</strong> <span id="impLower">0</span><strong> - </strong> <span id="impUpper">0</span></p>
+                <p><strong>Exploitability (Expl):</strong> <span id="explLower">0</span> <strong> - </strong> <span id="expl">0</span></p>
+                <p><strong>BaseScore (BS):</strong> <span id="bsLower">0</span><strong> - </strong> <span id="bs">0</span></p>
+            </div>
+
+            <!-- Temporal Metrics -->
+            <div class="col-md-6">
+                <h2>Temporal Metrics</h2>
+                <div class="form-group">
+                    <label for="ecm">ECM - Exploit Code Maturity</label>
+                    <select id="ecm" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.91">Unproven</option>
+                        <option value="0.94">Proof-of-concept</option>
+                        <option value="0.97">Functional</option>
+                        <option value="1">High</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rl">RL - Remediation Level</label>
+                    <select id="rl" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.95">Official Fix</option>
+                        <option value="0.96">Temporary Fix</option>
+                        <option value="0.97">Workaround</option>
+                        <option value="1">Unavailable</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rc">RC - Report Confidence</label>
+                    <select id="rc" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.92">Unknown</option>
+                        <option value="0.96">Reasonable</option>
+                        <option value="1">Confirmed</option>
+                    </select>
+                </div>
+
+                <!-- Temporal Metrics Results -->
+                <h3>Temporal Metrics Results</h3>
+                <p><strong>Temporal Score (TS):</strong> <span id="ts">0</span></p>
+
+                <!-- Environmental Metrics -->
+                <h2>Environmental Metrics</h2>
+                <div class="form-group">
+                    <label for="cr">CR - Confidentiality Report</label>
+                    <select id="cr" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.5">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="1.5">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ir">IR - Integrity Requirement</label>
+                    <select id="ir" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.5">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="1.5">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ar">AR - Availability Requirement</label>
+                    <select id="ar" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.5">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="1.5">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mav">MAV - Modified Attack Vector</label>
+                    <select id="mav" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.85">Network</option>
+                        <option value="0.62">Adjacent</option>
+                        <option value="0.55">Local</option>
+                        <option value="0.2">Physical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mac">MAC - Modified Attack Complexity</label>
+                    <select id="mac" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.44">High</option>
+                        <option value="0.77">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="mpr">MPR - Modified Privileges Required</label>
+                    <select id="mpr" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.85">None</option>
+                        <option value="0.62">Low</option>
+                        <option value="0.27">Hgh</option>
+                    </select>
+                </div>
+                   
+                <div class="form-group">
+                    <label for="mui">MUI - Modified User Interaction</label>
+                    <select id="mui" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.85">None</option>
+                        <option value="0.62">Required</option>
+                    </select>
+                </div>
+                    
+                <div class="form-group">  
+                    <label for="ms">MS - Modified Scope</label>
+                    <select id="ms" class="form-control">
+                        <option value="1">Unchanged</option>
+                        <option value="1">Changed</option>
+                    </select>
+                </div>
+                   
+                <div class="form-group">
+                    <label for="mc">MC - Modified Confidentiality</label>
+                    <select id="mc" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+                    
+                <div class="form-group">
+                    <label for="mi">MI - Modified Integrity</label>
+                    <select id="mi" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ma">MA - Modified Availability</label>
+                    <select id="ma" class="form-control">
+                        <option value="1">Not Defined</option>
+                        <option value="0.56">High</option>
+                        <option value="0.22">Low</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+
+                <!-- Environmental Metrics Results -->
+                <h3>Environmental Metrics Results</h3>
+                <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
+                <p><strong>Modified Impact (MImp):</strong> <span id="mimp">0</span></p>
+                <p><strong>Modified Exploitability (MExp):</strong> <span id="mexp">0</span></p>
+                <p><strong>Environmental Score (ES):</strong> <span id="es">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to calculate metrics -->
+    <script>
+        console.log("javascript called");
+        // Reference to dropdowns and result fields -- base
+        const avDropdown = document.getElementById("av");
+        const acDropdown = document.getElementById("ac");
+        const prDropdown = document.getElementById("pr");
+        const uiDropdown = document.getElementById("ui");
+        const sDropdown = document.getElementById("s");
+        const cDropdown = document.getElementById("c");
+        const iDropdown = document.getElementById("i");
+        const aDropdown = document.getElementById("a");
+        const limitToTenCheckbox = document.getElementById("limitToTen");
+
+        const complexSlider = document.getElementById("complexSlider");
+        const uiSlider = document.getElementById("uiSlider");
+        const scopeSlider = document.getElementById("scopeSlider");
+
+        const cSlider = document.getElementById("cSlider");
+        const iSlider = document.getElementById("iSlider");
+        const aSlider = document.getElementById("aSlider");
+
+        const complexValueSpan = document.getElementById("complexValue");
+        const uiValueSpan = document.getElementById("uiValue");
+        const scopeValueSpan = document.getElementById("scopeValue");
+
+        const cValueSpan = document.getElementById("cValue");
+        const iValueSpan = document.getElementById("iValue");
+        const aValueSpan = document.getElementById("aValue");
+
+        const issField = document.getElementById("iss");
+        const impField = document.getElementById("imp");
+        const explField = document.getElementById("expl");
+        const explLowerField = document.getElementById("explLower");
+        const bsField = document.getElementById("bs");
+        const bsLowerField = document.getElementById("bsLower");
+
+        const issLowerField = document.getElementById("issLower");
+        const issUpperField = document.getElementById("issUpper");
+
+        const impLowerField = document.getElementById("impLower");
+        const impUpperField = document.getElementById("impUpper");
+
+        // Reference to dropdowns and result fields -- temporal
+        const ecmDropdown = document.getElementById("ecm");
+        const rlDropdown = document.getElementById("rl");
+        const rcDropdown = document.getElementById("rc");
+
+        const tsField = document.getElementById("ts");
+
+        // Reference to dropdowns and result fields -- environmental
+        const crDropdown = document.getElementById("cr");
+        const irDropdown = document.getElementById("ir");
+        const arDropdown = document.getElementById("ar");
+        const mavDropdown = document.getElementById("mav");
+        const macDropdown = document.getElementById("mac");
+        const mprDropdown = document.getElementById("mpr");
+        const muiDropdown = document.getElementById("mui");
+        const msDropdown = document.getElementById("ms");
+        const mcDropdown = document.getElementById("mc");
+        const miDropdown = document.getElementById("mi");
+        const maDropdown = document.getElementById("ma");
+
+        const missField = document.getElementById("miss");
+        const mimpField = document.getElementById("mimp");
+        const mexpField = document.getElementById("mexp");
+        const esField = document.getElementById("es");
+
+        function calculateMinValue(sliderValue, boxValue, noneOrLowValue, highValue) {
+            if (boxValue === 0 || boxValue === 0.22) { // Assuming 'None' is 0 and 'Low' is 0.22
+                return boxValue;
+            }
+            return sliderValue * highValue + (1 - sliderValue) * noneOrLowValue;
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach event listener to dropdowns
+            avDropdown.addEventListener("change", calculateMetrics);
+            acDropdown.addEventListener("change", calculateMetrics);
+            prDropdown.addEventListener("change", calculateMetrics);
+            uiDropdown.addEventListener("change", calculateMetrics);
+            sDropdown.addEventListener("change", calculateMetrics);
+            cDropdown.addEventListener("change", calculateMetrics);
+            iDropdown.addEventListener("change", calculateMetrics);
+            aDropdown.addEventListener("change", calculateMetrics);
+            ecmDropdown.addEventListener("change", calculateMetrics);
+            rlDropdown.addEventListener("change", calculateMetrics);
+            rcDropdown.addEventListener("change", calculateMetrics);
+            limitToTenCheckbox.addEventListener("change", calculateMetrics);
+
+            mavDropdown.addEventListener("change", calculateMetrics);
+            macDropdown.addEventListener("change", calculateMetrics);
+            mprDropdown.addEventListener("change", calculateMetrics);
+            muiDropdown.addEventListener("change", calculateMetrics);
+            msDropdown.addEventListener("change", calculateMetrics);
+            mcDropdown.addEventListener("change", calculateMetrics);
+            miDropdown.addEventListener("change", calculateMetrics);
+            maDropdown.addEventListener("change", calculateMetrics);
+            crDropdown.addEventListener("change", calculateMetrics);
+            irDropdown.addEventListener("change", calculateMetrics);
+            arDropdown.addEventListener("change", calculateMetrics);
+
+            complexSlider.addEventListener("input", calculateMetrics);
+            uiSlider.addEventListener("input", calculateMetrics);
+            scopeSlider.addEventListener("input", calculateMetrics);
+
+            cSlider.addEventListener("input", calculateMetrics);
+            iSlider.addEventListener("input", calculateMetrics);
+            aSlider.addEventListener("input", calculateMetrics);
+
+        });
+        function calculateMetrics() {
+
+             // Log to check if function is being called
+            console.log("calculateMetrics called");
+
+            // Log current values of sliders
+            console.log("Slider Values:", cSlider.value, iSlider.value, aSlider.value);
+
+            // ... rest of the function code ...
+
+
+            const av = parseFloat(avDropdown.value);
+            const ac = parseFloat(acDropdown.value);
+            const pr = parseFloat(prDropdown.value);
+            const ui = parseFloat(uiDropdown.value);
+            const sValue = sDropdown.options[sDropdown.selectedIndex].text;  // Text value for "s"
+            const c = parseFloat(cDropdown.value);
+            const i = parseFloat(iDropdown.value);
+            const a = parseFloat(aDropdown.value);
+
+            complexValueSpan.textContent = `p=${parseFloat(complexSlider.value).toFixed(2)}`;
+            uiValueSpan.textContent = `p=${parseFloat(uiSlider.value).toFixed(2)}`;
+            scopeValueSpan.textContent = `p=${parseFloat(scopeSlider.value).toFixed(2)}`;
+
+            cValueSpan.textContent = `p=${parseFloat(cSlider.value).toFixed(2)}`;
+            iValueSpan.textContent = `p=${parseFloat(iSlider.value).toFixed(2)}`;
+            aValueSpan.textContent = `p=${parseFloat(aSlider.value).toFixed(2)}`;
+
+
+            const ecm = parseFloat(ecmDropdown.value);
+            const rl = parseFloat(rlDropdown.value);
+            const rc = parseFloat(rcDropdown.value);
+            
+            const mav = parseFloat(mavDropdown.value);
+            const mac = parseFloat(macDropdown.value);
+            const mpr = parseFloat(mprDropdown.value);
+            const mui = parseFloat(muiDropdown.value);
+            const msValue = msDropdown.options[sDropdown.selectedIndex].text;  // Text value for "s"
+            const mc = parseFloat(mcDropdown.value);
+            const mi = parseFloat(miDropdown.value);
+            const ma = parseFloat(maDropdown.value);
+
+            const cr = parseFloat(crDropdown.value);
+            const ir = parseFloat(irDropdown.value);
+            const ar = parseFloat(arDropdown.value);
+
+            const complexMin = calculateMinValue(parseFloat(complexSlider.value), parseFloat(acDropdown.value), 0.22, 0.56);
+            const uiMin = calculateMinValue(parseFloat(uiSlider.value), parseFloat(uiDropdown.value), 0.22, 0.56);
+            const scopeMin = calculateMinValue(parseFloat(scopeSlider.value), parseFloat(sDropdown.value), 0.22, 0.56);
+
+            const cMin = calculateMinValue(parseFloat(cSlider.value), parseFloat(cDropdown.value), 0.22, 0.56);
+            const iMin = calculateMinValue(parseFloat(iSlider.value), parseFloat(iDropdown.value), 0.22, 0.56);
+            const aMin = calculateMinValue(parseFloat(aSlider.value), parseFloat(aDropdown.value), 0.22, 0.56);
+
+            // Compute ISS, Impact, Exploitability, and BaseScore
+            const ISS = 1 - ((1-c)*(1-i)*(1-a));
+            const ISSLowerBound = 1 - Math.abs((1 - cMin) * (1 - iMin) * (1 - aMin));
+            const ISSUpperBound = 1 - ((1 - c) * (1 - i) * (1 - a));
+
+            //issLowerField.textContent = ISSLowerBound.toFixed(2);
+            //issUpperField.textContent = ISSUpperBound.toFixed(2);
+
+            let Imp;
+            let ImpLowerBound
+            let ImpUpperBound
+            if (sValue === "Unchanged") {
+                Imp = 6.42 * ISS;
+                ImpLowerBound = 6.42 * ISSLowerBound;
+                ImpUpperBound = 6.42 * ISSUpperBound;
+            } else {
+                Imp = 7.52 * (ISS-0.029) - 3.25 * Math.pow(ISS-0.02, 15);
+                ImpLowerBound = 7.52 * (ISSLowerBound-0.029) - 3.25 * Math.pow(ISSLowerBound-0.02, 15);
+                ImpUpperBound = 7.52 * (ISSUpperBound-0.029) - 3.25 * Math.pow(ISSUpperBound-0.02, 15);
+            }
+
+            //impLowerField.textContent = ImpLowerBound.toFixed(2);
+            //impUpperField.textContent = ImpUpperBound.toFixed(2);
+
+            const Expl = 8.22 * av * ac * pr * ui;
+            const ExplLower = 8.22 * av * complexMin * pr * uiMin;
+
+            let BS;
+            if (Imp === 0) {
+                BS = 0;
+            } else if (sValue === "Unchanged") {
+            let tempResult = Imp + Expl;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BS = Math.ceil(tempResult * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (Imp + Expl);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BS = Math.ceil(tempResult * 10) / 10;
+            }
+
+            let BSLower;
+            if (ImpLowerBound === 0) {
+                BSLower = 0;
+            } else if (sValue === "Unchanged") {
+            let tempResult = ImpLowerBound + ExplLower;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BSLower = Math.ceil(tempResult * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (ImpLowerBound + ExplLower);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            BSLower = Math.ceil(tempResult * 10) / 10;
+            }
+
+
+            // Compute Temporal Score
+            const TS = Math.ceil(BS * ecm * rl * rc * 10) / 10;
+
+            // Compute MISS, MImp, MExp, EnvironmentalScore
+            const MISS = Math.min(1 - ((1 - cr * mc) * (1 - ir * mi) * (1 - ar * ma)), 0.915);
+
+            let MImp;
+            if (msValue === "Unchanged") {
+                MImp = 6.42 * MISS;
+            } else {
+                MImp = 7.52 * (MISS - 0.029) - 3.25 * Math.pow(MISS - 0.02, 13);
+            }
+
+            const MExp = 8.22 * mav * mac * mpr * mui;
+
+            let ES;
+            if (MImp === 0) {
+                ES = 0;
+            } else if (msValue === "Unchanged") {
+            let tempResult = MImp + MExp;
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            ES = Math.ceil(tempResult * ecm * rl * rc * 10) / 10;
+            } else {
+                let tempResult = 1.08 * (MImp + MExp);
+                if (limitToTenCheckbox.checked) {
+                    tempResult = Math.min(tempResult, 10);
+            }
+            ES = Math.ceil(tempResult * ecm * rl * rc * 10) / 10;
+            }
+
+
+            // Update fields
+            issLowerField.textContent = ISSLowerBound.toFixed(2);
+            issUpperField.textContent = ISSUpperBound.toFixed(2);
+            //issField.textContent = ISS.toFixed(2);
+            //impField.textContent = Imp.toFixed(2);
+            impLowerField.textContent = ImpLowerBound.toFixed(2);
+            impUpperField.textContent = ImpUpperBound.toFixed(2);
+            explField.textContent = Expl.toFixed(2);
+            explLowerField.textContent = ExplLower.toFixed(2);
+            bsField.textContent = BS.toFixed(2);
+            bsLowerField.textContent = BSLower.toFixed(2);
+            tsField.textContent = TS.toFixed(2);
+            //missField.textContent = MISS.toFixed(2);
+            mimpField.textContent = MImp.toFixed(2);
+            mexpField.textContent = MExp.toFixed(2);
+            esField.textContent = ES.toFixed(2);
+        }
+
+
+
+
+
+        // Initial calculation
+        calculateMetrics();
+        </script>
+
+    <footer class="version">
+        Version 0.03
+    </footer>
+</body>
+</html>
