@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base Score Calculator - v3.1 Incorporating uncertainty</title>
+    <title>Base Score Calculator - v3.1 Incorporating Uncertainty</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Base Score Calculator - v3.1 - Incorporating uncertainty</h1>
+        <h1 class="text-center mb-4">Base Score Calculator - v3.1 - Incorporating Uncertainty</h1>
         <div class="row">
             <!-- Base Metrics -->
             <div class="col-md-6">
@@ -54,6 +54,8 @@
                         <option value="0.62">Low</option>
                         <option value="0.27">Hgh</option>
                     </select>
+                    <input type="range" id="prSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
+                    <span id="prValue">p=0.95</span>
                 </div>
 
                 <div class="form-group">
@@ -75,7 +77,10 @@
                     <input type="range" id="scopeSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
                     <span id="scopeValue">p=0.95</span>
                 </div>
-
+            </div>
+            <div class="col-md-6">
+            <br>
+            <br>
                 <div class="form-group">
                     <label for="c">C - Confidentiality</label>
                     <select id="c" class="form-control">
@@ -86,10 +91,8 @@
                         <input type="range" id="cSlider" class="custom-range" min="0" max="1" step="0.01" value="0.95">
                         <span id="cValue">p=0.95</span>
                 </div>
-            </div>
-            <div class="col-md-6">
-            <br>
-            <br>
+
+
                 <div class="form-group">
                     <label for="i">I - Integrity</label>
                     <select id="i" class="form-control">
@@ -116,14 +119,7 @@
                     <input type="checkbox" id="limitToTen" class="form-check-input" checked>
                     <label for="limitToTen" class="form-check-label">Limit to 10</label>
                 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
                 <!-- Base Metrics Results -->
                 <h3>Base Metrics Results</h3>
                 <p><strong>ISS: </strong> <span id="issLower">0</span><strong> - </strong> <span id="issUpper">0</span></p>              
@@ -150,6 +146,7 @@
         const limitToTenCheckbox = document.getElementById("limitToTen");
 
         const complexSlider = document.getElementById("complexSlider");
+        const prSlider = document.getElementById("prSlider");
         const uiSlider = document.getElementById("uiSlider");
         const scopeSlider = document.getElementById("scopeSlider");
 
@@ -158,6 +155,7 @@
         const aSlider = document.getElementById("aSlider");
 
         const complexValueSpan = document.getElementById("complexValue");
+        const prValueSpan = document.getElementById("prValue");
         const uiValueSpan = document.getElementById("uiValue");
         const scopeValueSpan = document.getElementById("scopeValue");
 
@@ -199,6 +197,7 @@
             limitToTenCheckbox.addEventListener("change", calculateMetrics);
 
             complexSlider.addEventListener("input", calculateMetrics);
+            prSlider.addEventListener("input", calculateMetrics);
             uiSlider.addEventListener("input", calculateMetrics);
             scopeSlider.addEventListener("input", calculateMetrics);
 
@@ -228,6 +227,7 @@
             const a = parseFloat(aDropdown.value);
 
             complexValueSpan.textContent = `p=${parseFloat(complexSlider.value).toFixed(2)}`;
+            prValueSpan.textContent = `p=${parseFloat(prSlider.value).toFixed(2)}`;
             uiValueSpan.textContent = `p=${parseFloat(uiSlider.value).toFixed(2)}`;
             scopeValueSpan.textContent = `p=${parseFloat(scopeSlider.value).toFixed(2)}`;
 
@@ -236,6 +236,7 @@
             aValueSpan.textContent = `p=${parseFloat(aSlider.value).toFixed(2)}`;
             
             const complexMin = calculateMinValue(parseFloat(complexSlider.value), parseFloat(acDropdown.value), 0.22, 0.56);
+            const prMin = calculateMinValue(parseFloat(prSlider.value), parseFloat(prDropdown.value), 0.22, 0.56);
             const uiMin = calculateMinValue(parseFloat(uiSlider.value), parseFloat(uiDropdown.value), 0.22, 0.56);
             const scopeMin = calculateMinValue(parseFloat(scopeSlider.value), parseFloat(sDropdown.value), 0.22, 0.56);
 
